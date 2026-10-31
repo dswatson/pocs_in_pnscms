@@ -1,8 +1,8 @@
-# Probabilities of causation in PNSCMs — reproducibility
+# Probabilities of causation in nondeterministic causal models
 
-Reproduction code for the synthetic and semi-synthetic experiments in the paper *Probabilities of Causation in Probabilistic Nondeterministic Structural Causal Models* (working title). The repository generates the **approved main-text and appendix figures** from frozen, documented latent kernels, and can separately refit the Adult and JOBS II models from their public source data.
+Reproduction code for the synthetic and semi-synthetic experiments in the paper *Probabilities of Causation in Probabilistic Nondeterministic Structural Causal Models*. The repository generates the approved main-text and appendix figures from frozen, documented latent kernels, and can separately refit the Adult and JOBS II models from their public source data.
 
-The calculations concern **population-level sharp identification intervals**, not sampling confidence intervals. Our semi-synthetic counterfactual ground truths depend on explicitly fitted causal models and are **not identified causal effects in the underlying observational studies**.
+The calculations concern population-level sharp identification intervals. Our semi-synthetic counterfactual ground truths depend on explicitly fitted causal models and are not identified causal effects in the underlying observational studies.
 
 ## Quick start
 
@@ -15,7 +15,7 @@ python -m pip install pytest
 python -m pytest -q
 ```
 
-The plotting command requires **no raw-data downloads**: frozen, fitted kernels and synthetic DGP parameters are provided in `data/derived/` and `data/simulations/`. Output files are written to the ignored `results/figures/` directory.
+The plotting command requires no raw-data downloads: frozen, fitted kernels and synthetic DGP parameters are provided in `data/derived/` and `data/simulations/`. Output files are written to the ignored `results/figures/` directory.
 
 | Produced file | Contents |
 |---|---|
@@ -60,7 +60,7 @@ For a finite latent state space, we define the masses and Bernoulli kernels
  b_u=p(y_x\mid u),\quad c_u=p(y_{x'}\mid u).
 \]
 
-The probability-of-causation ground truths use the **PNSCM product counterfactual semantics**, including
+The probability-of-causation ground truths use the PNSCM product counterfactual semantics, including
 
 \[
  \mathrm{PNS}=\sum_u w_u b_u(1-c_u),\quad
@@ -74,7 +74,7 @@ The `lp.py` solver independently optimizes the mass distribution over a fixed ei
 
 ## Adult fitting protocol
 
-Binary **treatment:** education at least bachelor's level (`education_num >= 13`). **Outcome:** annual income above $50,000. **Latent factor:** age at least 45. Use `adult.data` and `adult.test` together (48,842 records), and estimate each conditional Bernoulli probability with **add-one Laplace smoothing**, \((k+1)/(n+2)\); estimate the two latent weights by empirical frequencies.
+Binary **treatment:** education at least bachelor's level (`education_num >= 13`). **Outcome:** annual income above $50k. **Latent factor:** age at least 45. Use `adult.data` and `adult.test` together (48,842 records), and estimate each conditional Bernoulli probability with **add-one Laplace smoothing**, \((k+1)/(n+2)\); estimate the two latent weights by empirical frequencies.
 
 The assumed PNSCM is \(U\to X\to Y\) and \(U\to Y\). This treats age as sufficient for confounding within the constructed model; that assumption is not established by the Adult data.
 
@@ -144,8 +144,4 @@ The synthetic figures are independent of raw data and regenerate directly from t
 
 `python -m pytest -q` verifies frozen oracle values and width reductions, oracle coverage for all 20 synthetic DGPs and both semi-synthetic experiments, and independent LP agreement with analytic endpoints. If optional raw CSV files are available in `data/raw/`, it also checks that their refitted kernels match the frozen ones.
 
-Results are exact for the *constructed finite-population models*, not uncertainty-calibrated estimates of causal effects in the historical studies. In particular, the JOBS II model inherits assumptions about compliance and the outcome response mechanism. The original screening was exploratory; its alternative DGPs and discarded preliminary outcomes are intentionally not needed to reproduce the final paper figures.
-
-## Citation and reuse
-
-Please cite the accompanying manuscript and the original Adult and JOBS II data sources when reusing this code or data. Code licensing can be added by the repository owner before public release; no license for redistribution of raw third-party study data is implied.
+Results are exact for the constructed finite-population models, not uncertainty-calibrated estimates of causal effects in the historical studies. In particular, the JOBS II model inherits assumptions about compliance and the outcome response mechanism. The original screening was exploratory; its alternative DGPs and discarded preliminary outcomes are intentionally not needed to reproduce the final paper figures.
